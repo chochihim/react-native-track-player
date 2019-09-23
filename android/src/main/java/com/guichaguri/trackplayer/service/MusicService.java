@@ -151,6 +151,10 @@ public class MusicService extends HeadlessJsTaskService {
 
         if (manager == null || manager.shouldStopWithApp()) {
             stopSelf();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationManager not = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                not.deleteNotificationChannel(Utils.NOTIFICATION_CHANNEL);
+            }
         }
     }
 
