@@ -150,6 +150,8 @@ public class MusicService extends HeadlessJsTaskService {
         super.onTaskRemoved(rootIntent);
 
         if (manager == null || manager.shouldStopWithApp()) {
+            manager.getPlayback().stop();
+            destroy();
             stopSelf();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationManager not = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
