@@ -55,15 +55,6 @@ public class MetadataManager {
         this.service = service;
         this.manager = manager;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(Utils.NOTIFICATION_CHANNEL, "Playback", NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setShowBadge(false);
-            channel.setSound(null, null);
-
-            NotificationManager not = (NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE);
-            not.createNotificationChannel(channel);
-        }
-
         this.builder = new NotificationCompat.Builder(service, Utils.NOTIFICATION_CHANNEL);
         this.session = new MediaSessionCompat(service, "TrackPlayer", null, null);
 
@@ -87,9 +78,9 @@ public class MetadataManager {
         openApp.setAction(Intent.ACTION_VIEW);
         openApp.setData(Uri.parse("trackplayer://notification.click"));
 
-        builder.setContentIntent(PendingIntent.getActivity(context, 0, openApp, PendingIntent.FLAG_CANCEL_CURRENT));
+        builder.setContentIntent(PendingIntent.getActivity(context, Utils.NOTIFICATION_ID, openApp, PendingIntent.FLAG_CANCEL_CURRENT));
 
-        builder.setSmallIcon(R.drawable.play);
+        builder.setSmallIcon(R.drawable.icon);
         builder.setCategory(NotificationCompat.CATEGORY_TRANSPORT);
 
         // Stops the playback when the notification is swiped away
@@ -149,7 +140,7 @@ public class MetadataManager {
         builder.setColor(Utils.getInt(options, "color", NotificationCompat.COLOR_DEFAULT));
 
         // Update the icon
-        builder.setSmallIcon(getIcon(options, "icon", R.drawable.play));
+        builder.setSmallIcon(getIcon(options, "icon", R.drawable.icon));
 
         // Update the jump interval
         jumpInterval = Utils.getInt(options, "jumpInterval", 15);
@@ -307,7 +298,7 @@ public class MetadataManager {
 
     private void updateNotification() {
         if(session.isActive()) {
-            service.startForeground(1, builder.build());
+            service.startForeground(Utils.NOTIFICATION_ID, builder.build());
         } else {
             service.stopForeground(true);
         }

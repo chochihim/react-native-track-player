@@ -1,9 +1,8 @@
-import { Component } from 'react';
+import { Component } from "react";
 
 export = RNTrackPlayer;
 
 declare namespace RNTrackPlayer {
-
   export type EventType =
     | "playback-state"
     | "playback-error"
@@ -26,11 +25,7 @@ declare namespace RNTrackPlayer {
     | "remote-dislike"
     | "remote-bookmark";
 
-  export type TrackType =
-    | "default"
-    | "dash"
-    | "hls"
-    | "smoothstreaming";
+  export type TrackType = "default" | "dash" | "hls" | "smoothstreaming";
 
   type ResourceObject = any;
 
@@ -43,10 +38,15 @@ declare namespace RNTrackPlayer {
   export function registerEventHandler(handler: EventHandler): void;
 
   type ServiceHandler = () => Promise<void>;
-  export function registerPlaybackService(serviceFactory: () => ServiceHandler): void;
+  export function registerPlaybackService(
+    serviceFactory: () => ServiceHandler
+  ): void;
 
-  type EmitterSubscription = { remove: () => void; };
-  export function addEventListener(type: EventType, listener: (data: any) => void): EmitterSubscription;
+  type EmitterSubscription = { remove: () => void };
+  export function addEventListener(
+    type: EventType,
+    listener: (data: any) => void
+  ): EmitterSubscription;
 
   export interface TrackMetadata {
     duration?: number;
@@ -75,18 +75,41 @@ declare namespace RNTrackPlayer {
     maxBuffer?: number;
     playBuffer?: number;
     maxCacheSize?: number;
-    iosCategory?: 'playback' | 'playAndRecord' | 'multiRoute' | 'ambient' | 'soloAmbient' | 'record';
-    iosCategoryMode?: 'default' | 'gameChat' | 'measurement' | 'moviePlayback' | 'spokenAudio' | 'videoChat' | 'videoRecording' | 'voiceChat' | 'voicePrompt';
-    iosCategoryOptions?: Array<'mixWithOthers' | 'duckOthers' | 'interruptSpokenAudioAndMixWithOthers' | 'allowBluetooth' | 'allowBluetoothA2DP' | 'allowAirPlay' | 'defaultToSpeaker'>;
+    iosCategory?:
+      | "playback"
+      | "playAndRecord"
+      | "multiRoute"
+      | "ambient"
+      | "soloAmbient"
+      | "record";
+    iosCategoryMode?:
+      | "default"
+      | "gameChat"
+      | "measurement"
+      | "moviePlayback"
+      | "spokenAudio"
+      | "videoChat"
+      | "videoRecording"
+      | "voiceChat"
+      | "voicePrompt";
+    iosCategoryOptions?: Array<
+      | "mixWithOthers"
+      | "duckOthers"
+      | "interruptSpokenAudioAndMixWithOthers"
+      | "allowBluetooth"
+      | "allowBluetoothA2DP"
+      | "allowAirPlay"
+      | "defaultToSpeaker"
+    >;
     waitForBuffer?: boolean;
   }
 
   interface FeedbackOptions {
     /** Marks wether the option should be marked as active or "done" */
-    isActive: boolean
+    isActive: boolean;
 
     /** The title to give the action (relevant for iOS) */
-    title: string
+    title: string;
   }
 
   export interface MetadataOptions {
@@ -119,7 +142,10 @@ declare namespace RNTrackPlayer {
 
   // Player Queue Commands
 
-  export function add(tracks: Track | Track[], insertBeforeId?: string): Promise<void>;
+  export function add(
+    tracks: Track | Track[],
+    insertBeforeId?: string
+  ): Promise<void>;
   export function remove(trackIds: string | string[]): Promise<void>;
   export function skip(trackId: string): Promise<void>;
   export function skipToNext(): Promise<void>;
@@ -128,7 +154,10 @@ declare namespace RNTrackPlayer {
 
   // Control Center / Notification Metadata Commands
   export function updateOptions(options: MetadataOptions): void;
-  export function updateMetadataForTrack(id: string, metadata: TrackMetadata) : Promise<void>;
+  export function updateMetadataForTrack(
+    id: string,
+    metadata: TrackMetadata
+  ): Promise<void>;
 
   // Player Playback Commands
 
@@ -160,19 +189,34 @@ declare namespace RNTrackPlayer {
     duration: number;
   }
 
-  export class ProgressComponent<P = {}, S = {}> extends Component<P, ProgressComponentState & S> {
+  export class ProgressComponent<P = {}, S = {}> extends Component<
+    P,
+    ProgressComponentState & S
+  > {
     public getProgress: () => number;
     public getBufferedProgress: () => number;
   }
 
+  // React Hooks
+
+  export function usePlaybackState(): State;
+  export function useTrackPlayerEvents(
+    events: Array<string>,
+    handler: (payload: any) => void
+  ): void;
+  export function useTrackPlayerProgress(
+    interval?: number
+  ): ProgressComponentState;
+
   // Constants
 
   export const STATE_NONE: State;
+  export const STATE_READY: State;
   export const STATE_PLAYING: State;
   export const STATE_PAUSED: State;
   export const STATE_STOPPED: State;
   export const STATE_BUFFERING: State;
-  export const STATE_READY: State;
+  export const STATE_CONNECTING: State;
 
   export const RATING_HEART: RatingType;
   export const RATING_THUMBS_UP_DOWN: RatingType;
@@ -200,5 +244,4 @@ declare namespace RNTrackPlayer {
   export const PITCH_ALGORITHM_LINEAR: PitchAlgorithm;
   export const PITCH_ALGORITHM_MUSIC: PitchAlgorithm;
   export const PITCH_ALGORITHM_VOICE: PitchAlgorithm;
-
 }
