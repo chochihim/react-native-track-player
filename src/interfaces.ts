@@ -74,6 +74,7 @@ export enum Capability {
   PlayFromId = TrackPlayer.CAPABILITY_PLAY_FROM_ID,
   PlayFromSearch = TrackPlayer.CAPABILITY_PLAY_FROM_SEARCH,
   Pause = TrackPlayer.CAPABILITY_PAUSE,
+  TogglePlayPause = TrackPlayer.CAPABILITY_TOGGLE_PLAY_PAUSE,
   Stop = TrackPlayer.CAPABILITY_STOP,
   SeekTo = TrackPlayer.CAPABILITY_SEEK_TO,
   Skip = TrackPlayer.CAPABILITY_SKIP,

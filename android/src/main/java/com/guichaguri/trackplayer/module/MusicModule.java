@@ -123,6 +123,7 @@ public class MusicModule extends ReactContextBaseJavaModule implements ServiceCo
         constants.put("CAPABILITY_PLAY_FROM_ID", PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID);
         constants.put("CAPABILITY_PLAY_FROM_SEARCH", PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
         constants.put("CAPABILITY_PAUSE", PlaybackStateCompat.ACTION_PAUSE);
+        constants.put("CAPABILITY_TOGGLE_PLAY_PAUSE", PlaybackStateCompat.ACTION_PLAY_PAUSE);
         constants.put("CAPABILITY_STOP", PlaybackStateCompat.ACTION_STOP);
         constants.put("CAPABILITY_SEEK_TO", PlaybackStateCompat.ACTION_SEEK_TO);
         constants.put("CAPABILITY_SKIP", PlaybackStateCompat.ACTION_SKIP_TO_QUEUE_ITEM);
