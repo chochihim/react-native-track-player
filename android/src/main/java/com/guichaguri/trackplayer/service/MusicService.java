@@ -26,6 +26,12 @@ public class MusicService extends HeadlessJsTaskService {
     MusicManager manager;
     Handler handler;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        onStartForeground();
+    }
+
     @Nullable
     @Override
     protected HeadlessJsTaskConfig getTaskConfig(Intent intent) {
