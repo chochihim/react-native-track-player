@@ -329,7 +329,7 @@ public class MusicManager implements OnAudioFocusChangeListener {
         hasAudioFocus = r == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
 
-    private void abandonFocus() {
+    public void abandonFocus() {
         if(!hasAudioFocus) return;
         Log.d(Utils.LOG, "Abandoning audio focus...");
 

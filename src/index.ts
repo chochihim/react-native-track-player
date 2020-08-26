@@ -146,6 +146,10 @@ async function pause(): Promise<void> {
   return TrackPlayer.pause()
 }
 
+async function pauseForDucking(): Promise<void> {
+  return Platform.OS === 'android' ? TrackPlayer.pauseForDucking() : TrackPlayer.pause()
+}
+
 async function stop(): Promise<void> {
   return TrackPlayer.stop()
 }
@@ -229,6 +233,7 @@ export default {
   reset,
   play,
   pause,
+  pauseForDucking,
   stop,
   seekTo,
   setVolume,

@@ -144,6 +144,11 @@ public abstract class ExoPlayback<T extends Player> implements EventListener, Me
 
     public void pause() {
         player.setPlayWhenReady(false);
+        manager.abandonFocus();
+    }
+
+    public void pauseForDucking() {
+        player.setPlayWhenReady(false);
     }
 
     public void stop() {

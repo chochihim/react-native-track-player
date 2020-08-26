@@ -358,6 +358,14 @@ public class MusicModule extends ReactContextBaseJavaModule implements ServiceCo
     }
 
     @ReactMethod
+    public void pauseForDucking(final Promise callback) {
+        waitForConnection(() -> {
+            binder.getPlayback().pauseForDucking();
+            callback.resolve(null);
+        });
+    }
+
+    @ReactMethod
     public void stop(final Promise callback) {
         waitForConnection(() -> {
             binder.getPlayback().stop();
