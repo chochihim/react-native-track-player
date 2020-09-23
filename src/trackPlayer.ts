@@ -61,6 +61,14 @@ function isServiceRunning(): Promise<boolean> {
   return TrackPlayer.isServiceRunning()
 }
 
+async function setAlarm(seconds: Number): Promise<void> {
+  return Platform.OS === 'android' ? TrackPlayer.setAlarm(seconds) : Promise.resolve();
+}
+
+async function cancelAlarm(): Promise<void> {
+  return Platform.OS === 'android' ? TrackPlayer.cancelAlarm() : Promise.resolve();
+}
+
 // MARK: - Queue API
 
 /**
@@ -318,6 +326,8 @@ export default {
   registerPlaybackService,
   addEventListener,
   isServiceRunning,
+  setAlarm,
+  cancelAlarm,
 
   // MARK: - Queue API
   add,

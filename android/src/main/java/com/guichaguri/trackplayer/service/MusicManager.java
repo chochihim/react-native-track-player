@@ -1,6 +1,8 @@
 package com.guichaguri.trackplayer.service;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,8 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import androidx.annotation.RequiresApi;
+
+import android.os.SystemClock;
 import android.util.Log;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -61,6 +65,17 @@ public class MusicManager implements OnAudioFocusChangeListener {
 
     private boolean stopWithApp = false;
     private boolean alwaysPauseOnInterruption = false;
+
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
+    private BroadcastReceiver alarmReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(playback != null) {
+                playback.pause();
+            }
+        }
+    };
 
     @SuppressLint("InvalidWakeLockTag")
     public MusicManager(MusicService service) {
@@ -366,8 +381,32 @@ public class MusicManager implements OnAudioFocusChangeListener {
         // Release the metadata resources
         metadata.destroy();
 
+        // Cancel alarm
+        cancelAlarm();
+
         // Release the locks
         if(wifiLock.isHeld()) wifiLock.release();
         if(wakeLock.isHeld()) wakeLock.release();
+    }
+
+    public void setAlarm(Context context, final int seconds) {
+        if (alarmMgr == null) {
+            alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            context.registerReceiver(alarmReceiver, new IntentFilter(Utils.ALARM_INTENT));
+        }
+
+        Intent intent = new Intent(Utils.ALARM_INTENT);
+        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() +
+                        seconds * 1000, alarmIntent);
+    }
+
+    public void cancelAlarm() {
+        if (alarmMgr != null && alarmIntent != null) {
+            alarmMgr.cancel(alarmIntent);
+            alarmIntent = null;
+        }
     }
 }
