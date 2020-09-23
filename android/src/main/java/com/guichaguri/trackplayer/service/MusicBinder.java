@@ -1,5 +1,6 @@
 package com.guichaguri.trackplayer.service;
 
+import android.content.Context;
 import android.os.Binder;
 import android.os.Bundle;
 import com.facebook.react.bridge.Promise;
@@ -70,4 +71,11 @@ public class MusicBinder extends Binder {
         service.stopSelf();
     }
 
+    public void setAlarm(Context context, final int seconds) {
+        manager.setAlarm(context, seconds);
+    }
+
+    public void cancelAlarm() {
+        manager.cancelAlarm();
+    }
 }

@@ -51,6 +51,14 @@ function addEventListener(event: Event, listener: (data: any) => void) {
   return emitter.addListener(event, listener)
 }
 
+async function setAlarm(seconds: Number): Promise<void> {
+  return Platform.OS === 'android' ? TrackPlayer.setAlarm(seconds) : Promise.resolve();
+}
+
+async function cancelAlarm(): Promise<void> {
+  return Platform.OS === 'android' ? TrackPlayer.cancelAlarm() : Promise.resolve();
+}
+
 // MARK: - Queue API
 
 async function add(tracks: Track | Track[], insertBeforeId?: string): Promise<void> {
@@ -214,6 +222,8 @@ export default {
   destroy,
   registerPlaybackService,
   addEventListener,
+  setAlarm,
+  cancelAlarm,
 
   // MARK: - Queue API
   add,
