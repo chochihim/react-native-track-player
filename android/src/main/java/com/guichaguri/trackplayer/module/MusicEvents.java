@@ -36,6 +36,9 @@ public class MusicEvents extends BroadcastReceiver {
     public static final String PLAYBACK_METADATA = "playback-metadata-received";
     public static final String PLAYBACK_ERROR = "playback-error";
 
+    // Custom Events
+    public static final String SCHEDULED_TASK = "scheduled-task";
+
     private final ReactContext reactContext;
 
     public MusicEvents(ReactContext reactContext) {
