@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.media.session.MediaButtonReceiver;
@@ -15,7 +17,13 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.jstasks.HeadlessJsTaskConfig;
+import com.guichaguri.trackplayer.module.MusicEvents;
 import com.guichaguri.trackplayer.service.Utils;
+
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.annotation.Nullable;
 
 /**
@@ -25,6 +33,7 @@ public class MusicService extends HeadlessJsTaskService {
 
     MusicManager manager;
     Handler handler;
+    Timer timer;
 
     @Override
     public void onCreate() {
@@ -61,6 +70,11 @@ public class MusicService extends HeadlessJsTaskService {
         if(manager != null) {
             manager.destroy();
             manager = null;
+        }
+
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
         }
     }
 
@@ -114,6 +128,16 @@ public class MusicService extends HeadlessJsTaskService {
         manager = new MusicManager(this);
         handler = new Handler();
 
+        if (timer == null) {
+            timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    runScheduledTask();
+                }
+            }, new Date(), 60000);
+        }
+
         super.onStartCommand(intent, flags, startId);
         return START_NOT_STICKY;
     }
@@ -132,5 +156,10 @@ public class MusicService extends HeadlessJsTaskService {
         if (manager == null || manager.shouldStopWithApp()) {
             stopSelf();
         }
+    }
+
+    private void runScheduledTask() {
+        Bundle bundle = new Bundle();
+        emit(MusicEvents.SCHEDULED_TASK, bundle);
     }
 }
