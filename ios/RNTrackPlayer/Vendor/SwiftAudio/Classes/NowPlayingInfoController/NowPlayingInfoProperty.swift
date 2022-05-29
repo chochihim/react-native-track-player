@@ -13,6 +13,7 @@ import MediaPlayer
  Enum representing MPNowPlayingInfoProperties.
  Docs for each property is taken from [Apple docs](https://developer.apple.com/documentation/mediaplayer/mpnowplayinginfocenter/additional_metadata_properties).
  */
+@available(iOS 11.0, *)
 public enum NowPlayingInfoProperty: NowPlayingInfoKeyValue {
     
     /**
@@ -31,7 +32,6 @@ public enum NowPlayingInfoProperty: NowPlayingInfoKeyValue {
      The URL pointing to the now playing item's underlying asset.
      This constant is used by the system UI when video thumbnails or audio waveform visualizations are applicable.
      */
-    @available(iOS 10.3, *)
     case assetUrl(URL?)
     
     /**
@@ -116,7 +116,6 @@ public enum NowPlayingInfoProperty: NowPlayingInfoKeyValue {
      The service provider associated with the now-playing item.
      Value is a unique NSString that identifies the service provider for the now-playing item. If the now-playing item belongs to a channel or subscription service, this key can be used to coordinate various types of now-playing content from the service provider.
      */
-    @available(iOS 11.0, *)
     case serviceIdentifier(String?)
     
     
