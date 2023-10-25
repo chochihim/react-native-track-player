@@ -403,7 +403,7 @@ public class MusicManager implements OnAudioFocusChangeListener {
             android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S ? PendingIntent.FLAG_IMMUTABLE : 0
         );
 
-        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+        alarmMgr.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() +
                         seconds * 1000, alarmIntent);
     }
