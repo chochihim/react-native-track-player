@@ -1,6 +1,6 @@
 package com.guichaguri.trackplayer.service.player;
 
-import com.google.android.exoplayer2.extractor.mp4.MdtaMetadataEntry;
+import com.google.android.exoplayer2.metadata.mp4.MdtaMetadataEntry;
 import com.google.android.exoplayer2.metadata.Metadata;
 import com.google.android.exoplayer2.metadata.flac.VorbisComment;
 import com.google.android.exoplayer2.metadata.icy.IcyHeaders;

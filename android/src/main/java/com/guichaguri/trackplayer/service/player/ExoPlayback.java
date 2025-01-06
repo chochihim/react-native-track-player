@@ -8,7 +8,7 @@ import com.facebook.react.bridge.Promise;
 import com.google.android.exoplayer2.*;
 import com.google.android.exoplayer2.Player.EventListener;
 import com.google.android.exoplayer2.Timeline.Window;
-import com.google.android.exoplayer2.extractor.mp4.MdtaMetadataEntry;
+import com.google.android.exoplayer2.metadata.mp4.MdtaMetadataEntry;
 import com.google.android.exoplayer2.metadata.Metadata;
 import com.google.android.exoplayer2.metadata.MetadataOutput;
 import com.google.android.exoplayer2.metadata.flac.VorbisComment;
@@ -252,7 +252,7 @@ public abstract class ExoPlayback<T extends Player> implements EventListener, Me
     public void onTimelineChanged(@NonNull Timeline timeline, int reason) {
         Log.d(Utils.LOG, "onTimelineChanged: " + reason);
 
-        if((reason == Player.TIMELINE_CHANGE_REASON_PREPARED || reason == Player.TIMELINE_CHANGE_REASON_DYNAMIC) && !timeline.isEmpty()) {
+        if((reason == Player.TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED || reason == Player.TIMELINE_CHANGE_REASON_SOURCE_UPDATE) && !timeline.isEmpty()) {
             onPositionDiscontinuity(Player.DISCONTINUITY_REASON_INTERNAL);
         }
     }
