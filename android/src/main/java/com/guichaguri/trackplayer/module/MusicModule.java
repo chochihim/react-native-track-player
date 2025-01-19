@@ -1,11 +1,17 @@
 package com.guichaguri.trackplayer.module;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.v4.media.RatingCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -36,6 +42,17 @@ public class MusicModule extends ReactContextBaseJavaModule implements ServiceCo
     private ArrayDeque<Runnable> initCallbacks = new ArrayDeque<>();
     private boolean connecting = false;
     private Bundle options;
+
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
+    private BroadcastReceiver alarmReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            waitForConnection(() -> {
+                binder.getPlayback().pause();
+            });
+        }
+    };
 
     public MusicModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -491,7 +508,27 @@ public class MusicModule extends ReactContextBaseJavaModule implements ServiceCo
     public void setAlarm(final int seconds, final Promise callback) {
         waitForConnection(() -> {
             ReactContext context = getReactApplicationContext();
-            binder.setAlarm(context, seconds);
+            if (alarmMgr == null) {
+                alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    context.registerReceiver(alarmReceiver, new IntentFilter(Utils.ALARM_INTENT), Context.RECEIVER_EXPORTED);
+                } else {
+                    context.registerReceiver(alarmReceiver, new IntentFilter(Utils.ALARM_INTENT));
+                }
+            }
+
+            Intent intent = new Intent(Utils.ALARM_INTENT);
+            alarmIntent = PendingIntent.getBroadcast(
+                    context,
+                    0,
+                    intent,
+                    android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0
+            );
+
+            alarmMgr.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() +
+                            seconds * 1000, alarmIntent);
+
             if (callback != null) {
                 callback.resolve(null);
             }
@@ -501,8 +538,14 @@ public class MusicModule extends ReactContextBaseJavaModule implements ServiceCo
     @ReactMethod
     public void cancelAlarm(final Promise callback) {
         waitForConnection(() -> {
-            binder.cancelAlarm();
-            callback.resolve(null);
+            if (alarmMgr != null && alarmIntent != null) {
+                alarmMgr.cancel(alarmIntent);
+                alarmIntent = null;
+            }
+
+            if (callback != null) {
+                callback.resolve(null);
+            }
         });
     }
 }

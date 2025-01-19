@@ -71,10 +71,12 @@ public class MusicBinder extends Binder {
         service.stopSelf();
     }
 
+    @Deprecated
     public void setAlarm(Context context, final int seconds) {
         manager.setAlarm(context, seconds);
     }
 
+    @Deprecated
     public void cancelAlarm() {
         manager.cancelAlarm();
     }
