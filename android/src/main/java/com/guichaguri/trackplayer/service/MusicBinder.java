@@ -24,7 +24,9 @@ public class MusicBinder extends Binder {
     }
 
     public void post(Runnable r) {
-        service.handler.post(r);
+        if (service.handler != null) {
+            service.handler.post(r);
+        }
     }
 
     public ExoPlayback getPlayback() {
